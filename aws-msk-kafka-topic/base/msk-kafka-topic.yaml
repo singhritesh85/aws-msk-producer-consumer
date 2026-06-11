@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-kafka-topic
+  namespace: producer-consumer
+spec:
+  template:
+    spec:
+      serviceAccountName: msk-sa
+      restartPolicy: Never
+      containers:
+      - name: kafka
+        image: kafka
+        env:
+        - name: BOOTSTRAP
+          valueFrom:
+            configMapKeyRef:
+              name: msk-bootstrap
+              key: bootstrapServers
+        command:
+        - sh
+        - -c
+        - |
+          /opt/kafka/bin/kafka-topics.sh \
+            --bootstrap-server "$BOOTSTRAP" \
+            --command-config /config/client.properties \
+            --create \
+            --if-not-exists \
+            --topic kafka-demo-topic \
+            --partitions 3 \
+            --replication-factor 3
+        volumeMounts:
+        - name: config
+          mountPath: /config
+      volumes:
+      - name: config
+        configMap:
+          name: msk-client-config

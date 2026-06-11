@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer
+  namespace: producer-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+    spec:
+      serviceAccountName: msk-sa
+      containers:
+      - name: consumer
+        image: kafka
+        env:
+        - name: BOOTSTRAP
+          valueFrom:
+            configMapKeyRef:
+              name: msk-bootstrap
+              key: bootstrapServers
+        command:
+        - sh
+        - -c
+        - |
+          /opt/kafka/bin/kafka-console-consumer.sh \
+            --bootstrap-server ${BOOTSTRAP} \
+            --topic kafka-demo-topic \
+            --group eks-group \
+            --command-config /config/client.properties \
+            --from-beginning
+        volumeMounts:
+        - name: config
+          mountPath: /config
+      volumes:
+      - name: config
+        configMap:
+          name: msk-client-config
