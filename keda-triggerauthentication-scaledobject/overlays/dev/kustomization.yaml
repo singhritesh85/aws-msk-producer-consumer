@@ -1,4 +1,37 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 resources:
   - ../../base
+
+configMapGenerator:
+  - name: msk-config
+    literals:
+      - bootstrapServers=PLACEHOLDER
+      - awsRegion=PLACEHOLDER
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: msk-config
+      fieldPath: data.bootstrapServers
+    targets:
+      - select:
+          kind: ScaledObject
+          name: kafka-consumer-scaler
+        fieldPaths:
+          - spec.triggers.0.metadata.bootstrapServers
+
+  - source:
+      kind: ConfigMap
+      name: msk-config
+      fieldPath: data.awsRegion
+    targets:
+      - select:
+          kind: ScaledObject
+          name: kafka-consumer-scaler
+        fieldPaths:
+          - spec.triggers.0.metadata.awsRegion
