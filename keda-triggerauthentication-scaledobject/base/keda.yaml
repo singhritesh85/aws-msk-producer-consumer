@@ -40,7 +40,7 @@ spec:
   triggers:
     - type: apache-kafka
       metadata:
-        bootstrapServers: ""PLACEHOLDER_BOOTSTRAP_SERVERS""
+        bootstrapServers: "PLACEHOLDER_BOOTSTRAP_SERVERS"
         consumerGroup: eks-group
         topic: kafka-demo-topic
         lagThreshold: "1"
