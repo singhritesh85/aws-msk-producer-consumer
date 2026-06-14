@@ -40,12 +40,12 @@ spec:
   triggers:
     - type: apache-kafka
       metadata:
-        bootstrapServers: "PLACEHOLDER_BOOTSTRAP_SERVERS"
+        bootstrapServers: PLACEHOLDER_BOOTSTRAP_SERVERS
         consumerGroup: eks-group
         topic: kafka-demo-topic
         lagThreshold: "1"
         offsetResetPolicy: latest
         allowIdleConsumers: "true"
-        awsRegion: aws-region
+        awsRegion: PLACEHOLDER_AWS_REGION
       authenticationRef:
         name: keda-msk-trigger-auth
