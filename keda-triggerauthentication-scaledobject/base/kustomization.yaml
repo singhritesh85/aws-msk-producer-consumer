@@ -3,15 +3,3 @@ kind: Kustomization
 
 resources:
   - keda.yaml
-  - parameters.yaml
-
-replacements:
-  - source:
-      kind: ConfigMap
-      name: msk-connection-params
-      fieldPath: data.bootstrap-servers
-    targets:
-      - select:
-          kind: ScaledObject
-          name: kafka-consumer-scaler
-        fieldPath: spec.triggers.0.metadata.bootstrapServers
