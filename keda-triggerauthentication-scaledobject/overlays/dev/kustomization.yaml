@@ -7,9 +7,9 @@ resources:
 configMapGenerator:
   - name: msk-config
     literals:
-      - bootstrapServers=PLACEHOLDER
-      - awsRegion=PLACEHOLDER
-
+      - bootstrapServers=${BOOTSTRAP_SERVERS}
+      - awsRegion=${AWS_REGION}
+      
 generatorOptions:
   disableNameSuffixHash: true
 
